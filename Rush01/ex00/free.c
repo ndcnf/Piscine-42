@@ -1,47 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print.c                                            :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ldominiq <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/15 18:45:02 by ldominiq          #+#    #+#             */
-/*   Updated: 2021/08/15 18:45:05 by ldominiq         ###   ########.fr       */
+/*   Created: 2021/08/15 18:44:54 by ldominiq          #+#    #+#             */
+/*   Updated: 2021/08/15 18:44:55 by ldominiq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
+#include <stdlib.h>
 
-void	ft_putchar(char c)
+void	ft_free(char **board, int size)
 {
-	write(1, &c, 1);
-}
-
-void	ft_puterror(void)
-{
-	write(1, "Error\n", 6);
-}
-
-// Print resolved board
-void	ft_printboard(char **board, int size)
-{
-	int	x;
-	int	y;
-
-	y = 0;
-	x = 0;
-	while (y < size)
-	{
-		while (x < 8)
-		{
-			ft_putchar(board[y][x] + '0');
-			if (x < size)
-				ft_putchar(' ');
-			x++;
-		}
-		ft_putchar('\n');
-		x = 0;
-		y++;
-	}
+	// Free memory but maybe a mistake - (size + 4)
+	while (size--)
+		free(board[size]);
+	free(board);
 }

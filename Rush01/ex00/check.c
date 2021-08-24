@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   backtracking.c                                     :+:      :+:    :+:   */
+/*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ldominiq <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/14 16:19:49 by ldominiq          #+#    #+#             */
-/*   Updated: 2021/08/14 17:13:55 by ldominiq         ###   ########.fr       */
+/*   Created: 2021/08/15 18:47:15 by ldominiq          #+#    #+#             */
+/*   Updated: 2021/08/15 18:47:18 by ldominiq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 
 void	ft_puterror(void);
 
-int	argscheck(char *args)
+// Verifying if args passed are correct
+int	ft_argscheck(char *args)
 {
 	int	i;
 	int	j;
@@ -45,7 +46,24 @@ int	argscheck(char *args)
 	return (0);
 }
 
-void	ft_puterror(void)
+// Useless because argscheck and just doing 4x4 in the end
+int	ft_get_size(char *str)
 {
-	write(1, "Error\n", 6);
+	int	size;
+	int	i;
+
+	size = 0;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] >= '1' && str[i] <= '9')
+			size++;
+		else
+			return (0);
+		if (str[++i] == ' ' && !str[++i])
+			return (0);
+	}
+	if (size != 16)
+		return (0);
+	return (4);
 }

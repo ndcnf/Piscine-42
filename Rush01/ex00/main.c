@@ -14,32 +14,39 @@
 #include <stdio.h>
 
 void	ft_puterror(void);
-int		argscheck(char *args);
-int		*chartoint(char *str);
-int		**ft_placement(int row, int *borders, int cell);
-void    ft_printboard(int **board);
+int		ft_argscheck(char *args);
+char	**ft_init(char *borders, int size);
+void	ft_printboard(char **board, int size);
+int		ft_run(char **board, int size);
+int		ft_get_size(char *str);
+void	ft_free(char **board, int size);
 
 int	main(int argc, char **argv)
 {
-	int	flag;
-	int	*args;
-	int	i;
-	int	**board;
-	
-	args = malloc(16);
-	i = 0;
+	int		flag;
+	char	**board;
+	int		size;
+
+	//size == 4
+	size = ft_get_size(argv[1]);
 	flag = 0;
 	if (argc != 2)
 	{
 		ft_puterror();
 		return (0);
 	}
-	flag = argscheck(argv[1]);
+	flag = ft_argscheck(argv[1]);
 	if (flag == 0)
 	{
-		args = chartoint(argv[1]);
+		// Initializing board
+		board = ft_init(argv[1], size);
+		if (ft_run(board, size))
+			// Print resolved board
+			ft_printboard(board, size);
+		else
+			ft_puterror();
+		// Free memory
+		ft_free(board, size);
 	}
-	board = ft_placement(0, args, 1);
-	ft_printboard(board);
 	return (0);
 }

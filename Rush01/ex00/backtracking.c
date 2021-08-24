@@ -12,86 +12,64 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int	ft_check(int *borders, int **board);
+int		ft_check(char **board, int x, int y, int size);
+int		ft_args_col(char **board, int x, int value, int size);
+int		ft_args_row(char **board, int y, int value, int size);
+int		ft_exist(char **board, int x, int y, int size);
+void	ft_printboard(int **board);
+void	ft_puterror(void);
 
-int	**ft_placement(int row, int *borders, int cell)
+int	ft_check(char **board, int x, int y, int size)
 {
-	int	**board;
-	int i;
-	int	j;
-	int	k;
-
-	k = 0;
-	i = -1;
-	j = 0;
-	
-	board = (int **)malloc(4 * sizeof(int *));
-    while (++i < 4)
-         board[i] = (int *)malloc(4 * sizeof(int));
-
-	while (cell <= 16)
-	{
-		if (ft_check(borders, board))
-		{
-			if (cell == 16)
-			{
-				return (board);
-			}
-
-			else
-			{
-				ft_placement(row, borders, ++cell);
-			}
-		}
-	}
-	printf("Oups\n");
-	free(board);
-	return (board);
+	if (ft_exist(board, x, y, size)
+		|| ft_args_col(board, x, 1, size) > board[x][size] || (y == size - 1
+		&& ft_args_col(board, x, -1, size) != board[x][size + 1])
+		|| ft_args_row(board, y, 1, size) > board[y][size + 2] || (x == size - 1
+		&& ft_args_row(board, y, -1, size) != board[y][size + 3]))
+		return (0);
+	return (1);
 }
 
-int	ft_check(int *borders, int **board)
+int	ft_backtracking(char **board, int num, int size)
 {
+	int	i;
 	int	x;
 	int	y;
-	int	arg_x;
-	int arg_y;
-	int	num;
-	int	*tmp;
+
+	if (num == size * size)
+		return (1);
+	i = 0;
+	// Position in board -> y = 0, 0.25(0), 0.5(0), 0.75(0), 1, 1.25(1), etc..
+	//						x = 0, 1, 2, 3, 0, etc..
+	x = num % size;
+	y = num / size;
+	while (++i <= size)
+	{
+		board[y][x] = i;
+		if (ft_check(board, x, y, size))
+		{
+			if (ft_backtracking(board, num + 1, size))
+			{
+				return (1);
+			}
+			board[y][x] = 0;
+		}
+	}
+	board[y][x] = 0;
+	return (0);
+}
+
+int	ft_run(char **board, int size)
+{
 	int	i;
 
-	tmp = borders;
-	num = 1;
-	arg_x = 0;
-	arg_y = 0;
-	x = 0;
-	y = 0;
-	i = 1;
-	while (y < 4)
+	i = -1;
+	while (++i < size)
 	{
-		while (x < 4)
-		{
-			if (num > 4)
-				num = 1;
-			if (board[y][x] != num)
-				board[y][x] = num;
-			if (y != 0)
-			{
-				while (i <= y && (board[y][x - 1] == num || board[y - 1][x] == num))
-				{
-					if (num >= 4)
-						num = 1;
-					if (board[y - i][x] == num)
-						board[y][x] = ++num;
-					i++;
-				}
-				i = 1;
-			}
-			num++;
-			x++;
-		}
-		x = 0;
-		num = 1;
-		y++;
+		// Check if args are possible - 4 2 impossible for exemple -> up down | left right
+		if (board[i][size] + board[i][size + 1] > size + 1
+			|| board[i][size + 2] + board[i][size + 3] > size + 1)
+			return (0);
 	}
-	return (1);
+	return (ft_backtracking (board, 0, size));
 }
